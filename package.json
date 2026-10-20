@@ -1,0 +1,15 @@
+{
+  "name": "ev-charging-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Commercial-Grade EV Charging Platform with Distributed Systems Academic Demonstration",
+  "scripts": {
+    "dev": "npm --prefix backend run dev & npm --prefix frontend run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "start": "npm --prefix backend run dev",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build",
+    "build": "npm run build:backend && npm run build:frontend"
+  }
+}
