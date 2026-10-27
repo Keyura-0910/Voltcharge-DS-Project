@@ -19,7 +19,10 @@ export const WebSocketProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [systemEvents, setSystemEvents] = useState<SystemEventLog[]>([]);
 
   useEffect(() => {
-    const wsUrl = `ws://${window.location.hostname}:5000`;
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = window.location.port === '3000'
+      ? `ws://${window.location.hostname}:5000`
+      : `${protocol}//${window.location.host}`;
     let ws: WebSocket;
 
     try {
