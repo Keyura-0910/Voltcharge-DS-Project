@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import http from 'http';
+import path from 'path';
+import fs from 'fs';
 import { apiRouter } from './routes/apiRoutes';
 import { initWebSocketServer } from './websocket/wsServer';
 
@@ -17,6 +19,23 @@ app.use('/api', apiRouter);
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'EV Charging Platform Backend Running' });
 });
+
+// Serve frontend build in production
+const frontendDist = fs.existsSync(path.resolve(process.cwd(), 'frontend/dist'))
+  ? path.resolve(process.cwd(), 'frontend/dist')
+  : path.resolve(__dirname, '../../frontend/dist');
+
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('<h2>VoltCharge Backend is running. Frontend build not found at: ' + frontendDist + '</h2>');
+  });
+}
 
 const server = http.createServer(app);
 
